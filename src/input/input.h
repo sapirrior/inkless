@@ -15,6 +15,7 @@ typedef enum {
     KEY_SEARCH_BACKWARD = '?',
     KEY_SEARCH_NEXT = 'n',
     KEY_SEARCH_PREV = 'N',
+    KEY_HELP = 'h',
     KEY_ESC = 27,
     KEY_QUIT = 'q',
 } InkKey;

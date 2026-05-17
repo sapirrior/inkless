@@ -32,6 +32,7 @@ Ink follows a Go-inspired **Domain-Driven Design (DDD)** where each feature set 
     - Half-page (`d`, `u`)
     - Full-page (`f`, `Space`, `b`)
     - Document jumps (`g`, `G`, `<`, `>`)
+- **Interactive Help**: Access a structured, monochrome command reference by pressing `h`. Returns to document via `Esc`.
 - **Regex Search Engine**:
     - Forward (`/`) and Backward (`?`) search using POSIX Extended Regular Expressions.
     - Repeating searches (`n`, `N`) with direction persistence.
@@ -60,5 +61,8 @@ make clean    # Removes the build directory
 
 ## 6. Coding Conventions
 - **Naming**: `snake_case` for functions/variables, `PascalCase` for structs.
-- **Integrity**: Transactional rendering and strict signal handling for terminal state restoration.
+- **Hardened Integrity**:
+    - **Defensive I/O**: Strict `realloc` validation and CRLF handling during file load.
+    - **Memory Safety**: OOB prevention in layout mapping and dynamic RenderBuf sizing to eliminate overflow risks.
+    - **Robust Navigation**: Clamped scroll and view logic ensures stability during extreme terminal resizing.
 - **Tone**: Technical documentation and commit messages follow a factual, hyperbole-free professional standard.

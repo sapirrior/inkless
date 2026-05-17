@@ -17,6 +17,7 @@ typedef struct AppState {
     char last_pattern[256];
     int last_search_dir;
     bool search_failed;
+    bool show_help;
     bool running;
 } AppState;
 

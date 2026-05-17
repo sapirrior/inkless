@@ -9,6 +9,15 @@ void command_dispatch(AppState *app, int key) {
         // Let's process it anyway if it's not a dummy key.
     }
 
+    if (app->show_help) {
+        if (key == KEY_HELP || key == KEY_ESC) {
+            app->show_help = false;
+        } else if (key == KEY_QUIT) {
+            cmd_sys_quit(app);
+        }
+        return;
+    }
+
     switch (key) {
         case KEY_UP:              cmd_nav_up(app); break;
         case KEY_DOWN:            cmd_nav_down(app); break;
@@ -22,6 +31,7 @@ void command_dispatch(AppState *app, int key) {
         case KEY_SEARCH_BACKWARD: cmd_search_backward(app); break;
         case KEY_SEARCH_NEXT:     cmd_search_next(app); break;
         case KEY_SEARCH_PREV:     cmd_search_prev(app); break;
+        case KEY_HELP:            cmd_sys_help(app); break;
         case KEY_ESC:             app->last_pattern[0] = '\0'; break;
         case KEY_QUIT:            cmd_sys_quit(app); break;
     }

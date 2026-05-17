@@ -14,15 +14,34 @@ void doc_load_file(Document *doc, const char *filename) {
 
     while ((read = getline(&line, &len, f)) != -1) {
         if (doc->line_count >= doc->line_cap) {
-            doc->line_cap = doc->line_cap == 0 ? 128 : doc->line_cap * 2;
-            doc->raw_lines = realloc(doc->raw_lines, sizeof(char *) * doc->line_cap);
-            if (!doc->raw_lines) ink_die("Memory allocation failed");
+            size_t new_cap = doc->line_cap == 0 ? 128 : doc->line_cap * 2;
+            char **new_lines = realloc(doc->raw_lines, sizeof(char *) * new_cap);
+            if (!new_lines) {
+                free(line);
+                fclose(f);
+                ink_die("Memory allocation failed for document lines");
+            }
+            doc->raw_lines = new_lines;
+            doc->line_cap = new_cap;
         }
         
         // Remove newline character if present
-        if (read > 0 && line[read - 1] == '\n') line[read - 1] = '\0';
+        if (read > 0 && line[read - 1] == '\n') {
+            line[read - 1] = '\0';
+            read--;
+        }
+        // Handle CRLF
+        if (read > 0 && line[read - 1] == '\r') {
+            line[read - 1] = '\0';
+        }
         
-        doc->raw_lines[doc->line_count++] = strdup(line);
+        char *dup = strdup(line);
+        if (!dup) {
+            free(line);
+            fclose(f);
+            ink_die("Memory allocation failed during line duplication");
+        }
+        doc->raw_lines[doc->line_count++] = dup;
     }
     free(line);
     fclose(f);

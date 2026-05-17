@@ -1,5 +1,6 @@
 #include "view.h"
 #include "../app/state.h"
+#include "../utils/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,13 +11,18 @@
 void rb_init(RenderBuf *rb) {
     rb->cap = 16384;
     rb->data = malloc(rb->cap);
+    if (!rb->data) {
+        perror("malloc");
+        exit(1);
+    }
     rb->len = 0;
-    if (rb->data) rb->data[0] = '\0';
+    rb->data[0] = '\0';
 }
 
 void rb_append(RenderBuf *rb, const char *s, size_t len) {
+    if (!rb->data) return;
     if (rb->len + len >= rb->cap) {
-        size_t new_cap = rb->cap * 2 + len;
+        size_t new_cap = (rb->cap + len) * 2;
         char *new_data = realloc(rb->data, new_cap);
         if (!new_data) return;
         rb->data = new_data;
@@ -28,12 +34,28 @@ void rb_append(RenderBuf *rb, const char *s, size_t len) {
 }
 
 void rb_printf(RenderBuf *rb, const char *fmt, ...) {
-    char buf[1024];
     va_list ap;
     va_start(ap, fmt);
-    int n = vsnprintf(buf, sizeof(buf), fmt, ap);
+    
+    // First pass to determine required size
+    va_list ap_copy;
+    va_copy(ap_copy, ap);
+    int n = vsnprintf(NULL, 0, fmt, ap_copy);
+    va_end(ap_copy);
+
+    if (n < 0) {
+        va_end(ap);
+        return;
+    }
+
+    size_t size = (size_t)n;
+    char *buf = malloc(size + 1);
+    if (buf) {
+        vsnprintf(buf, size + 1, fmt, ap);
+        rb_append(rb, buf, size);
+        free(buf);
+    }
     va_end(ap);
-    if (n > 0) rb_append(rb, buf, (size_t)n);
 }
 
 void rb_flush(RenderBuf *rb) {
@@ -51,14 +73,55 @@ void rb_free(RenderBuf *rb) {
     rb->cap = 0;
 }
 
+static void view_render_help(AppState *app, RenderBuf *rb) {
+    int rows = app->ts.rows;
+    int cols = app->ts.cols;
+    
+    // Clear screen and move to top
+    rb_append(rb, "\x1b[2J\x1b[H", 7);
+    
+    const char *title = "--- Ink Pager Help ---";
+    int title_len = (int)strlen(title);
+    int title_x = (cols - title_len) / 2;
+    if (title_x < 1) title_x = 1;
+    
+    rb_printf(rb, "\x1b[1;%dH%s", title_x, title);
+    
+    int num_lines = 0;
+    const char **help_lines = utils_get_help_lines(&num_lines);
+
+    for (int i = 0; i < num_lines; i++) {
+        if (i + 3 > rows) break;
+        rb_printf(rb, "\x1b[%d;1H%s", i + 3, help_lines[i]);
+    }
+}
+
 void view_render_screen(AppState *app) {
     RenderBuf rb;
     rb_init(&rb);
+
+    if (app->show_help) {
+        view_render_help(app, &rb);
+        rb_flush(&rb);
+        rb_free(&rb);
+        return;
+    }
 
     rb_append(&rb, "\x1b[H", 3);
 
     int margin = (app->ts.cols * 8) / 100;
     int view_height = app->ts.rows - 1;
+    if (view_height < 0) view_height = 0;
+
+    // Safety clamp for scroll_y
+    if (app->scroll_y < 0) app->scroll_y = 0;
+    if (app->layout.count > 0) {
+        if (app->scroll_y >= (int)app->layout.count) {
+            app->scroll_y = (int)app->layout.count - 1;
+        }
+    } else {
+        app->scroll_y = 0;
+    }
 
     regex_t regex;
     bool has_regex = false;
@@ -74,15 +137,18 @@ void view_render_screen(AppState *app) {
             for (int j = 0; j < margin; j++) rb_append(&rb, " ", 1);
             
             const char *line = app->layout.display_lines[line_idx];
+            if (!line) continue;
+
             if (has_regex) {
                 regmatch_t pmatch;
                 const char *ptr = line;
                 while (regexec(&regex, ptr, 1, &pmatch, 0) == 0) {
+                    size_t match_len = (size_t)(pmatch.rm_eo - pmatch.rm_so);
                     // Text before match
                     rb_append(&rb, ptr, (size_t)pmatch.rm_so);
                     // Match (inverted)
                     rb_append(&rb, "\x1b[7m", 4);
-                    rb_append(&rb, ptr + pmatch.rm_so, (size_t)(pmatch.rm_eo - pmatch.rm_so));
+                    rb_append(&rb, ptr + pmatch.rm_so, match_len);
                     rb_append(&rb, "\x1b[m", 3);
                     ptr += pmatch.rm_eo;
                     if (pmatch.rm_so == pmatch.rm_eo) ptr++; // Avoid infinite loop on empty matches

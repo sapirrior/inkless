@@ -7,6 +7,11 @@ void utils_do_search(AppState *app, const char *pattern, int dir) {
     if (!pattern || pattern[0] == '\0') return;
     app->search_failed = false;
 
+    if (app->doc.line_count == 0 || !app->layout.raw_to_display) {
+        app->search_failed = true;
+        return;
+    }
+
     regex_t regex;
     if (regcomp(&regex, pattern, REG_EXTENDED) != 0) {
         app->search_failed = true;
@@ -61,8 +66,12 @@ void utils_do_search(AppState *app, const char *pattern, int dir) {
         }
     }
 
-    if (found != -1) {
+    if (found != -1 && (size_t)found < app->doc.line_count) {
         app->scroll_y = (int)app->layout.raw_to_display[found];
+        // Persistent pattern storage only on success
+        strncpy(app->last_pattern, pattern, sizeof(app->last_pattern) - 1);
+        app->last_pattern[sizeof(app->last_pattern) - 1] = '\0';
+        app->last_search_dir = dir;
     } else {
         app->search_failed = true;
     }
