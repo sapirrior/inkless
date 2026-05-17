@@ -33,7 +33,25 @@ The project is modularized into three distinct layers:
     - Repeating searches (`n`, `N`) with direction persistence.
 - **GNU Less Aesthetic**: Minimalist colon prompt with inverted `(END)` indicator at file completion.
 
-## 4. Coding Conventions
+## 4. Getting Started
+### Build Instructions
+To compile Ink, ensure you have a C compiler (GCC/Clang) and Make installed.
+```bash
+make          # Compiles the binary to build/ink
+make clean    # Removes the build directory
+```
+
+### Usage
+```bash
+./build/ink <filename>
+```
+
+## 5. Development Workflow
+- **Version Control**: Use Git for all changes. The remote repository is hosted at `https://github.com/sapirrior/ink`.
+- **Commit Messages**: Strictly follow the [Conventional Commits](https://www.conventionalcommits.org/) specification (e.g., `feat:`, `fix:`, `docs:`, `refactor:`).
+- **PR Process**: All major features should be developed on feature branches and merged via pull requests.
+
+## 6. Coding Conventions
 - **Naming**: `snake_case` for functions/variables, `PascalCase` for structs.
 - **Integrity**: Transactional rendering and strict signal handling for terminal state restoration.
 - **Tone**: Technical documentation and commit messages follow a factual, hyperbole-free professional standard.
