@@ -1,8 +1,13 @@
 use crate::app::App;
 use crate::input::Key;
+use crossterm::{cursor, ExecutableCommand};
+use std::io::{self, Write};
 
 pub fn read_prompt(app: &App, prompt_char: char) -> String {
     let mut input = String::new();
+    let mut stdout = io::stdout();
+    let _ = stdout.execute(cursor::Show);
+
     loop {
         crate::view::draw_prompt(app, prompt_char, &input);
         match crate::input::read_key() {
@@ -14,6 +19,8 @@ pub fn read_prompt(app: &App, prompt_char: char) -> String {
             _ => {}
         }
     }
+
+    let _ = stdout.execute(cursor::Hide);
     input
 }
 
