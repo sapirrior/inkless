@@ -1,4 +1,4 @@
-#include "ink.h"
+#include "inkless.h"
 
 AppState *g_app = NULL;
 

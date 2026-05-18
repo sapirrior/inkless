@@ -1,4 +1,4 @@
-#include "ink.h"
+#include "inkless.h"
 #include <unistd.h>
 #include <regex.h>
 
@@ -105,7 +105,8 @@ static void view_render_help(AppState *app, RenderBuf *rb) {
     
     rb_append(rb, "\x1b[m\x1b[2J\x1b[H", 10);
     
-    const char *title = "--- Ink Pager Help ---";
+    char title[64];
+    snprintf(title, sizeof(title), "--- Inkless Pager v%s Help ---", INKLESS_VERSION);
     int title_len = (int)strlen(title);
     int title_x = (cols - title_len) / 2;
     if (title_x < 1) title_x = 1;

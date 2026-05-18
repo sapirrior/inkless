@@ -1,4 +1,4 @@
-#include "ink.h"
+#include "inkless.h"
 
 void doc_init(Document *doc) {
     doc->raw_lines = NULL;

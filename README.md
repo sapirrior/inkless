@@ -1,6 +1,6 @@
-# Ink
+# Inkless
 
-Ink is a terminal-based text pager written in C11 for POSIX systems. It focuses on minimalist design, zero external dependencies, and stable layout management.
+Inkless is a terminal-based text pager written in C11 for POSIX systems. It focuses on minimalist design, zero external dependencies, and stable layout management.
 
 ## Technical Specifications
 
@@ -26,12 +26,12 @@ To compile the binary:
 make
 ```
 
-The executable will be located at `build/ink`.
+The executable will be located at `build/inkl`.
 
 ## Usage
 
 ```bash
-./build/ink <filename> [filename2 ...]
+./build/inkl <filename> [filename2 ...]
 ```
 
 ## Commands

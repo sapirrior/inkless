@@ -1,5 +1,5 @@
-#ifndef INK_H
-#define INK_H
+#ifndef INKLESS_H
+#define INKLESS_H
 
 #define _POSIX_C_SOURCE 200809L
 
@@ -14,7 +14,7 @@
 
 /* --- CONSTANTS --- */
 
-#define INK_VERSION "0.1.0"
+#define INKLESS_VERSION "0.1.0"
 
 /* --- KEY DEFINITIONS --- */
 

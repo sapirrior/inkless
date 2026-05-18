@@ -1,6 +1,6 @@
-# Project Ink: High-Integrity Terminal Pager
+# Project Inkless: High-Integrity Terminal Pager
 
-Ink is a minimalist, high-performance successor to GNU `less`, written in C11 with a focus on POSIX compatibility and zero external dependencies. It treats the terminal as a structured canvas, prioritizing readability through specialized layout algorithms.
+Inkless is a minimalist, high-performance successor to GNU `less`, written in C11 with a focus on POSIX compatibility and zero external dependencies. It treats the terminal as a structured canvas, prioritizing readability through specialized layout algorithms.
 
 ## 1. Technical Specifications
 - **Language**: C11 (`-std=c11`)
@@ -9,8 +9,8 @@ Ink is a minimalist, high-performance successor to GNU `less`, written in C11 wi
 - **Dependencies**: None (Standard C Library & POSIX APIs only)
 
 ## 2. Architectural Design
-Ink follows a flat, modular architecture designed for maximum clarity and minimal boilerplate.
-- **Single Header Rule**: The entire project's public API, structures, and constants are consolidated into exactly ONE unified header file (`source/ink.h`).
+Inkless follows a flat, modular architecture designed for maximum clarity and minimal boilerplate.
+- **Single Header Rule**: The entire project's public API, structures, and constants are consolidated into exactly ONE unified header file (`source/inkless.h`).
 - **Domain-Driven Implementation**: Implementation logic is grouped by domain into individual `.c` files directly within the `source/` directory. Subdirectories are strictly avoided.
 - **AppState Centralization**: A global `AppState` struct anchors all domain-specific data, enabling decoupled interaction between modules.
 
@@ -47,19 +47,19 @@ Ink follows a flat, modular architecture designed for maximum clarity and minima
 
 ## 4. Getting Started
 ### Build Instructions
-To compile Ink, ensure you have a C compiler (GCC/Clang) and Make installed.
+To compile Inkless, ensure you have a C compiler (GCC/Clang) and Make installed.
 ```bash
-make          # Compiles the binary to build/ink
+make          # Compiles the binary to build/inkl
 make clean    # Removes the build directory
 ```
 
 ### Usage
 ```bash
-./build/ink <filename>
+./build/inkl <filename>
 ```
 
 ## 5. Development Workflow
-- **Version Control**: Use Git for all changes. The remote repository is hosted at `https://github.com/sapirrior/ink`.
+- **Version Control**: Use Git for all changes. The remote repository is hosted at `https://github.com/sapirrior/inkless`.
 - **Commit Messages**: Strictly follow the [Conventional Commits](https://www.conventionalcommits.org/) specification (e.g., `feat:`, `fix:`, `docs:`, `refactor:`).
 - **PR Process**: All major features should be developed on feature branches and merged via pull requests.
 

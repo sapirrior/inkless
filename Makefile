@@ -8,7 +8,7 @@ OBJ_DIR = $(BUILD_DIR)/objs
 
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-TARGET = $(BUILD_DIR)/ink
+TARGET = $(BUILD_DIR)/inkl
 
 all: $(TARGET)
 

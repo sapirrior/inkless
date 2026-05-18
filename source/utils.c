@@ -1,4 +1,4 @@
-#include "ink.h"
+#include "inkless.h"
 #include <regex.h>
 
 static const char *help_lines[] = {

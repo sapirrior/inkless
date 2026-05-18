@@ -1,4 +1,4 @@
-#include "ink.h"
+#include "inkless.h"
 
 void layout_init(Layout *layout) {
     layout->display_lines = NULL;
