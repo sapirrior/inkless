@@ -5,6 +5,10 @@ use super::{cmd_nav, cmd_search, cmd_sys};
 pub fn dispatch(app: &mut App, key: Key) {
     if app.search_failed { app.search_failed = false; }
     if app.search_wrapped { app.search_wrapped = false; }
+    
+    // Clear error message on next key press, unless it's a resize event
+    if let Key::Resize(_, _) = key {}
+    else { app.error_message = None; }
 
     if app.show_help {
         match key {

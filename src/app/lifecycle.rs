@@ -19,18 +19,23 @@ impl App {
             running: true,
             terminal_cols: 0,
             terminal_rows: 0,
+            error_message: None,
         }
     }
 
     pub fn init(&mut self) {
         if !self.filenames.is_empty() {
             let filename = self.filenames[self.current_file_index].clone();
-            self.doc.load_file(filename);
+            if let Err(e) = self.doc.load_file(filename) {
+                self.error_message = Some(e.to_string());
+            }
         } else {
             use std::io::IsTerminal;
             let stdin = std::io::stdin();
             if !stdin.is_terminal() {
-                self.doc.load_stream(stdin);
+                if let Err(e) = self.doc.load_stream(stdin) {
+                    self.error_message = Some(e.to_string());
+                }
             }
         }
     }
@@ -40,7 +45,11 @@ impl App {
             self.current_file_index = index;
             self.doc.clear();
             let filename = self.filenames[self.current_file_index].clone();
-            self.doc.load_file(filename);
+            if let Err(e) = self.doc.load_file(filename) {
+                self.error_message = Some(e.to_string());
+            } else {
+                self.error_message = None;
+            }
             self.scroll_y = 0;
             self.layout.compute(&self.doc, self.terminal_cols);
         }

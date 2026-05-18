@@ -16,4 +16,5 @@ pub struct App {
     pub running: bool,
     pub terminal_cols: u16,
     pub terminal_rows: u16,
+    pub error_message: Option<String>,
 }

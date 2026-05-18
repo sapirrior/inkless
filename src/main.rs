@@ -7,6 +7,8 @@ mod view;
 mod commands;
 mod utils;
 
+mod errors;
+
 use app::App;
 use std::env;
 use std::io::{self, IsTerminal};

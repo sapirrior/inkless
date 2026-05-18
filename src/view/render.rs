@@ -13,7 +13,7 @@ pub fn render_screen(app: &App) {
 
     if app.show_help {
         render_help(app, &mut stdout);
-        let _ = stdout.flush().unwrap();
+        let _ = stdout.flush();
         return;
     }
 
@@ -83,7 +83,12 @@ pub fn render_screen(app: &App) {
     let _ = stdout.queue(cursor::MoveTo(0, app.terminal_rows.saturating_sub(1)));
     let _ = stdout.queue(Clear(ClearType::CurrentLine));
 
-    if app.search_failed {
+    if let Some(ref msg) = app.error_message {
+        let _ = stdout.queue(SetForegroundColor(Color::Red));
+        let _ = stdout.queue(style::SetAttribute(Attribute::Reverse));
+        let _ = stdout.queue(Print(msg));
+        let _ = stdout.queue(style::SetAttribute(Attribute::Reset));
+    } else if app.search_failed {
         let _ = stdout.queue(style::SetAttribute(Attribute::Reverse));
         let _ = stdout.queue(Print("Pattern not found (press any key)"));
         let _ = stdout.queue(style::SetAttribute(Attribute::Reset));
@@ -102,7 +107,7 @@ pub fn render_screen(app: &App) {
         }
     }
 
-    let _ = stdout.flush().unwrap();
+    let _ = stdout.flush();
 }
 
 fn render_help(app: &App, stdout: &mut io::Stdout) {

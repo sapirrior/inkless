@@ -12,8 +12,8 @@ impl Layout {
         }
 
         let margin = (cols as usize * 8) / 100;
-        let content_width = if cols as usize > 2 * margin {
-            cols as usize - (2 * margin)
+        let content_width = if cols as usize > margin * 2 {
+            cols as usize - (margin * 2)
         } else {
             1
         };
@@ -27,10 +27,10 @@ impl Layout {
                 continue;
             }
 
-            let mut start = 0;
-            let mut first_chunk = true;
             let chars: Vec<char> = raw.chars().collect();
             let len = chars.len();
+            let mut start = 0;
+            let mut first_chunk = true;
 
             while start < len {
                 let current_raw = if first_chunk { raw_num } else { 0 };
@@ -43,37 +43,37 @@ impl Layout {
                 }
 
                 let mut split = start + content_width;
-                // Look for space or hyphen to split
+                if split > len { split = len; }
+
                 let mut found_split = false;
-                for j in (start..=split).rev() {
-                    if j < len && (chars[j] == ' ' || chars[j] == '-') {
+                // Look for space or hyphen to split
+                for j in (start..split).rev() {
+                    if chars[j] == ' ' || chars[j] == '-' {
                         split = j;
                         found_split = true;
                         break;
                     }
                 }
 
-                if !found_split {
+                if found_split {
+                    let mut chunk_end = split;
+                    let mut next_start = split + 1;
+                    
+                    if chars[split] == '-' {
+                        chunk_end = split + 1;
+                        next_start = split + 1;
+                    }
+
+                    let chunk: String = chars[start..chunk_end].iter().collect();
+                    self.add_line(&chunk, current_raw);
+                    start = next_start;
+                } else {
                     // Hard split
-                    split = start + content_width;
                     let chunk: String = chars[start..split].iter().collect();
                     self.add_line(&chunk, current_raw);
                     start = split;
-                } else {
-                    // Split at space or hyphen
-                    let mut split_len = split - start;
-                    if chars[split] == '-' {
-                        split_len += 1;
-                    }
-                    
-                    let chunk: String = chars[start..start + split_len].iter().collect();
-                    self.add_line(&chunk, current_raw);
-                    
-                    start = split;
-                    if chars[split] == ' ' {
-                        start += 1;
-                    }
                 }
+                
                 first_chunk = false;
             }
         }
