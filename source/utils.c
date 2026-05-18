@@ -14,6 +14,8 @@ static const char *help_lines[] = {
     "    G, >, End        Jump to end",
     "    :n               Next file",
     "    :p               Previous file",
+    "    :<number>        Jump to line number",
+    "    :N               Toggle line numbers",
     "",
     "  Search",
     "    /                Search forward (Regex)",

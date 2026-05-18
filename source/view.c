@@ -97,14 +97,6 @@ void view_read_prompt(AppState *app, char prompt_char, char *buf, size_t size) {
     terminal_hide_cursor();
 }
 
-void view_render_colon_prompt(AppState *app) {
-    RenderBuf rb;
-    rb_init(&rb);
-    rb_printf(&rb, "\x1b[%d;1H\x1b[m\x1b[2K:", app->ts.rows);
-    rb_flush(&rb);
-    rb_free(&rb);
-}
-
 /* --- Screen Rendering --- */
 
 static void view_render_help(AppState *app, RenderBuf *rb) {
@@ -166,7 +158,16 @@ void view_render_screen(AppState *app) {
         rb_printf(&rb, "\x1b[%d;1H\x1b[2K", i + 1);
 
         if (line_idx < (int)app->layout.count) {
-            for (int j = 0; j < margin; j++) rb_append(&rb, " ", 1);
+            if (app->show_line_numbers) {
+                size_t raw_line = app->layout.display_to_raw[line_idx];
+                if (raw_line > 0) {
+                    rb_printf(&rb, "\x1b[38;5;242m%*zu \x1b[m", margin - 1, raw_line);
+                } else {
+                    for (int j = 0; j < margin; j++) rb_append(&rb, " ", 1);
+                }
+            } else {
+                for (int j = 0; j < margin; j++) rb_append(&rb, " ", 1);
+            }
             
             const char *line = app->layout.display_lines[line_idx];
             if (!line) continue;

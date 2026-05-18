@@ -33,6 +33,8 @@ Ink follows a flat, modular architecture designed for maximum clarity and minima
     - Half-page (`d`, `u`)
     - Full-page (`f`, `Space`, `b`)
     - Document jumps (`g`, `G`, `<`, `>`)
+    - **Go-to-Line**: Jump to a specific line via the colon prompt (e.g., `:100`).
+    - **Line Numbers**: Toggle line number visibility via `:N`.
     - **Multi-File Navigation**: Transition between multiple files via `:n` (next) and `:p` (previous).
 - **Interactive Help**: Access a structured, monochrome command reference by pressing `h`. Returns to document via `Esc`.
 - **Regex Search Engine**:

@@ -56,6 +56,7 @@ typedef struct {
     size_t count;
     size_t cap;
     size_t *raw_to_display;
+    size_t *display_to_raw;
 } Layout;
 
 typedef struct AppState {
@@ -71,6 +72,7 @@ typedef struct AppState {
     int last_search_dir;
     bool search_failed;
     bool show_help;
+    bool show_line_numbers;
     bool running;
 } AppState;
 
@@ -120,7 +122,6 @@ void rb_flush(RenderBuf *rb);
 void rb_free(RenderBuf *rb);
 void view_render_screen(AppState *app);
 void view_read_prompt(AppState *app, char prompt_char, char *buf, size_t size);
-void view_render_colon_prompt(AppState *app);
 
 /* commands.c */
 void command_dispatch(AppState *app, int key);

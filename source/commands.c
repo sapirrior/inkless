@@ -85,14 +85,24 @@ void cmd_sys_help(AppState *app) { app->show_help = !app->show_help; }
 void cmd_sys_quit(AppState *app) { app->running = false; }
 
 void cmd_sys_colon(AppState *app) {
-    view_render_colon_prompt(app);
-    terminal_show_cursor();
-    int key = input_read_key();
-    terminal_hide_cursor();
+    char buf[256];
+    view_read_prompt(app, ':', buf, sizeof(buf));
+    if (buf[0] == '\0') return;
 
-    if (key == 'n' && app->current_file_index < app->num_files - 1)
+    if (strcmp(buf, "n") == 0 && app->current_file_index < app->num_files - 1)
         app_switch_file(app, app->current_file_index + 1);
-    else if (key == 'p' && app->current_file_index > 0)
+    else if (strcmp(buf, "p") == 0 && app->current_file_index > 0)
         app_switch_file(app, app->current_file_index - 1);
-    else if (key == 'q') cmd_sys_quit(app);
+    else if (strcmp(buf, "q") == 0) cmd_sys_quit(app);
+    else if (strcmp(buf, "N") == 0) {
+        app->show_line_numbers = !app->show_line_numbers;
+    } else {
+        char *end;
+        long line = strtol(buf, &end, 10);
+        if (*end == '\0' && line > 0) {
+            if (line > (long)app->doc.line_count) line = (long)app->doc.line_count;
+            app->scroll_y = (int)app->layout.raw_to_display[line - 1];
+            clamp_scroll(app);
+        }
+    }
 }
