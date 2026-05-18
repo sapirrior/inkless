@@ -80,7 +80,6 @@ typedef struct AppState {
     int last_search_dir;
     bool search_failed;
     bool search_wrapped;
-    bool search_case_insensitive;
     bool show_help;
     bool show_line_numbers;
     bool running;

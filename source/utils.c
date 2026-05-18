@@ -22,7 +22,6 @@ static const char *help_lines[] = {
     "    ?                Search backward (Regex)",
     "    n                Repeat search forward",
     "    N                Repeat search backward",
-    "    :i               Toggle case-insensitive search",
     "    Esc              Clear active search highlights",
     "",
     "  System",
@@ -77,11 +76,8 @@ void utils_do_search(AppState *app, const char *pattern, int dir) {
     app->search_failed = false;
     app->search_wrapped = false;
 
-    int flags = REG_EXTENDED;
-    if (app->search_case_insensitive) flags |= REG_ICASE;
-
     regex_t regex;
-    if (regcomp(&regex, pattern, flags) != 0) {
+    if (regcomp(&regex, pattern, REG_EXTENDED) != 0) {
         app->search_failed = true;
         return;
     }

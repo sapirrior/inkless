@@ -43,7 +43,6 @@ Inkless follows a flat, modular architecture designed for maximum clarity and mi
     - Repeating searches (`n`, `N`) with direction persistence and fixed iteration logic.
     - **Visual Highlighting**: Real-time ANSI-inverted highlighting of all matches.
     - **Wraparound Search**: Automatic document loop-back with "Search wrapped" status notification.
-    - **Case Sensitivity**: Toggle case-insensitive matching via the colon prompt (`:i`).
     - **Clear Search**: Press `Esc` to instantly remove all active highlighting.
 - **GNU Less Aesthetic**: Minimalist colon prompt with inverted `(END)` indicator at file completion.
 
