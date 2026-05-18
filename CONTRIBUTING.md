@@ -5,6 +5,7 @@ Thank you for your interest in contributing to Inkless. This project maintains h
 ## Engineering Philosophy
 
 - **High Integrity**: Leverage Rust's type system and ownership model to ensure memory safety and prevent undefined behavior.
+- **Structured Error Handling**: Prefer explicit `Result` propagation over panics. All user-facing errors must be captured and reported through the UI.
 - **Granular Modularity**: Maintain a strict separation of concerns using the "Connector" pattern. `mod.rs` files must not contain implementation logic.
 - **Predictable Interface**: Adhere to the "One Action, One Command" philosophy to avoid command redundancy.
 

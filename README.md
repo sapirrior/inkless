@@ -8,6 +8,8 @@ Inkless is a minimalist, high-integrity terminal pager written in Rust. It focus
 - **Dynamic Margins**: Automatic side padding for improved readability on wide displays.
 - **Regex Search**: Pattern-based forward and backward searching with real-time visual highlighting.
 - **Responsive Resizing**: Immediate layout recomputation upon terminal window resizing.
+- **Pipe Support**: Seamlessly functions as a standard pager (e.g., `ls | inkl`).
+- **Robust Error Handling**: Structured error propagation with user-friendly status bar reporting; no silent failures or unhandled panics.
 - **Strict Command Philosophy**: A consistent, non-redundant interface following a "One Action, One Command" rule.
 
 ## Installation
